@@ -5,190 +5,378 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SEO 자동 검수 · 알라딘 개발센터</title>
 <style>
-:root {
-  --bg: #f7f7f5;
-  --surface: #ffffff;
-  --border: #e5e5e2;
-  --border2: #d0d0cc;
-  --text: #1a1a18;
-  --text2: #6b6b67;
-  --text3: #9b9b97;
-  --accent: #1a1a18;
-  --pass: #1a7f4b;
-  --pass-bg: #edfbf3;
-  --warn: #b45309;
-  --warn-bg: #fef9ec;
-  --fail: #b91c1c;
-  --fail-bg: #fef2f2;
-  --skip: #6b6b67;
-  --skip-bg: #f3f3f1;
-  --info: #1d4ed8;
-  --info-bg: #eff6ff;
-  --mono: 'Courier New', monospace;
-  --r: 8px;
-  --rl: 12px;
-}
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+:root {
+  --black: #111111;
+  --gray-dark: #444444;
+  --gray-mid: #888888;
+  --gray-light: #cccccc;
+  --gray-line: #e8e8e8;
+  --gray-bg: #f5f5f5;
+  --white: #ffffff;
+  --pass: #1a6b3c;
+  --warn: #92400e;
+  --fail: #991b1b;
+  --skip: #888888;
+  --mono: 'Courier New', monospace;
+}
+
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: var(--white);
+  color: var(--black);
   font-family: 'Apple SD Gothic Neo', 'Pretendard', -apple-system, sans-serif;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.7;
   min-height: 100vh;
 }
 
-.page { max-width: 800px; margin: 0 auto; padding: 48px 24px 80px; }
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 64px 24px 120px;
+}
 
-header { margin-bottom: 40px; }
-.brand { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; }
-h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
-.desc { font-size: 13px; color: var(--text2); }
+/* Header */
+header {
+  border-bottom: 2px solid var(--black);
+  padding-bottom: 24px;
+  margin-bottom: 48px;
+}
 
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--rl); padding: 20px 24px; margin-bottom: 24px; }
+.brand {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray-mid);
+  margin-bottom: 12px;
+}
 
-.field-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; display: block; }
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
 
-.input-row { display: flex; gap: 8px; }
+.desc {
+  font-size: 14px;
+  color: var(--gray-dark);
+}
+
+/* Input */
+.input-wrap {
+  margin-bottom: 48px;
+}
+
+.field-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray-mid);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.input-row {
+  display: flex;
+  gap: 0;
+  border: 1.5px solid var(--black);
+}
 
 input[type="url"] {
   flex: 1;
-  background: var(--bg);
-  border: 1px solid var(--border2);
-  border-radius: var(--r);
-  padding: 10px 14px;
+  border: none;
+  padding: 14px 16px;
   font-size: 13px;
   font-family: var(--mono);
-  color: var(--text);
+  color: var(--black);
+  background: var(--white);
   outline: none;
-  transition: border-color 0.15s;
 }
-input[type="url"]:focus { border-color: var(--accent); }
-input[type="url"]::placeholder { color: var(--text3); }
+
+input[type="url"]::placeholder { color: var(--gray-light); }
 
 button.primary {
-  background: var(--accent);
-  color: #fff;
+  background: var(--black);
+  color: var(--white);
   border: none;
-  border-radius: var(--r);
-  padding: 10px 20px;
+  padding: 14px 24px;
   font-size: 13px;
   font-weight: 600;
+  letter-spacing: 0.05em;
   cursor: pointer;
   white-space: nowrap;
   transition: opacity 0.15s;
 }
-button.primary:hover { opacity: 0.82; }
-button.primary:disabled { opacity: 0.35; cursor: not-allowed; }
 
-.note { font-size: 12px; color: var(--text3); margin-top: 10px; }
+button.primary:hover { opacity: 0.75; }
+button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
 
-.loading { display: none; text-align: center; padding: 48px 0; }
+.input-note {
+  font-size: 12px;
+  color: var(--gray-mid);
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+/* Loading */
+.loading {
+  display: none;
+  padding: 48px 0;
+  border-top: 1px solid var(--gray-line);
+}
+
+.loading-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
 .spinner {
-  width: 28px; height: 28px;
-  border: 2px solid var(--border2);
-  border-top-color: var(--accent);
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--gray-line);
+  border-top-color: var(--black);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
-  margin: 0 auto 14px;
+  flex-shrink: 0;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-msg { font-size: 13px; color: var(--text2); }
 
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-msg {
+  font-size: 14px;
+  color: var(--gray-dark);
+}
+
+/* Report */
 .report { display: none; }
 
-.report-header {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--rl);
-  padding: 20px 24px;
-  margin-bottom: 12px;
+.report-summary {
+  border-top: 2px solid var(--black);
+  border-bottom: 1px solid var(--gray-line);
+  padding: 32px 0;
+  margin-bottom: 0;
 }
+
 .report-url {
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--info);
-  margin-bottom: 14px;
+  color: var(--gray-mid);
+  margin-bottom: 20px;
   word-break: break-all;
 }
-.score-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-.score-num { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
-.score-ok { color: var(--pass); }
-.score-mid { color: var(--warn); }
-.score-bad { color: var(--fail); }
-.score-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
-.badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
-.badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
-.b-pass { background: var(--pass-bg); color: var(--pass); }
-.b-warn { background: var(--warn-bg); color: var(--warn); }
-.b-fail { background: var(--fail-bg); color: var(--fail); }
-.b-skip { background: var(--skip-bg); color: var(--skip); }
 
-.ext-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
-.ext-a {
-  font-size: 12px; color: var(--info);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 5px 11px;
-  text-decoration: none;
-  transition: border-color 0.15s;
+.score-block {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 16px;
 }
-.ext-a:hover { border-color: var(--info); }
+
+.score-num {
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.score-denom {
+  font-size: 18px;
+  color: var(--gray-mid);
+  font-weight: 400;
+}
+
+.score-pass { color: var(--black); }
+.score-mid { color: var(--black); }
+.score-bad { color: var(--fail); }
+
+.stat-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.stat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-pass { background: var(--pass); }
+.dot-warn { background: var(--warn); }
+.dot-fail { background: var(--fail); }
+.dot-skip { background: var(--gray-light); }
+
+.stat-label { color: var(--gray-dark); }
+.stat-num { font-weight: 600; }
+
+.ext-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ext-a {
+  font-size: 12px;
+  color: var(--gray-dark);
+  text-decoration: none;
+  border: 1px solid var(--gray-line);
+  padding: 5px 12px;
+  transition: border-color 0.15s, color 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.ext-a:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+/* Sections */
+.sections { border-bottom: 1px solid var(--gray-line); }
 
 .section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--rl);
-  margin-bottom: 8px;
-  overflow: hidden;
+  border-top: 1px solid var(--gray-line);
 }
+
 .sec-head {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
   cursor: pointer;
   user-select: none;
 }
-.sec-head:hover { background: var(--bg); }
-.sec-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-.sec-arrow { font-size: 11px; color: var(--text3); transition: transform 0.15s; }
-.collapsed .sec-arrow { transform: rotate(-90deg); }
-.collapsed .sec-body { display: none; }
-.sec-body { border-top: 1px solid var(--border); }
 
+.sec-head:hover .sec-title { opacity: 0.6; }
+
+.sec-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sec-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: opacity 0.15s;
+}
+
+.sec-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  letter-spacing: 0.04em;
+}
+
+.badge-pass { color: var(--pass); background: #f0faf4; }
+.badge-warn { color: var(--warn); background: #fef9ec; }
+.badge-fail { color: var(--fail); background: #fef2f2; }
+
+.sec-arrow {
+  font-size: 12px;
+  color: var(--gray-mid);
+  transition: transform 0.2s;
+}
+
+.section.collapsed .sec-arrow { transform: rotate(-90deg); }
+.section.collapsed .sec-body { display: none; }
+
+.sec-body { padding-bottom: 8px; }
+
+/* Check rows */
 .check-row {
   display: grid;
-  grid-template-columns: 22px 1fr auto;
-  gap: 8px;
+  grid-template-columns: 20px 1fr 60px;
+  gap: 12px;
   align-items: start;
-  padding: 11px 20px;
-  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+  border-top: 1px solid var(--gray-bg);
   font-size: 13px;
 }
-.check-row:last-child { border-bottom: none; }
-.c-icon { font-size: 13px; padding-top: 1px; }
-.c-name { font-weight: 500; margin-bottom: 2px; }
-.c-detail { font-size: 11px; font-family: var(--mono); color: var(--text2); line-height: 1.5; word-break: break-all; }
+
+.c-icon {
+  font-size: 12px;
+  padding-top: 2px;
+  font-weight: 700;
+}
+
+.icon-pass { color: var(--pass); }
+.icon-warn { color: var(--warn); }
+.icon-fail { color: var(--fail); }
+.icon-skip { color: var(--gray-light); }
+
+.c-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--black);
+  margin-bottom: 3px;
+}
+
+.c-detail {
+  font-size: 12px;
+  font-family: var(--mono);
+  line-height: 1.5;
+  word-break: break-all;
+  color: var(--gray-dark);
+}
+
 .c-detail.fail { color: var(--fail); }
 .c-detail.warn { color: var(--warn); }
 .c-detail.pass { color: var(--pass); }
-.c-status { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px; }
-.s-pass { background: var(--pass-bg); color: var(--pass); }
-.s-warn { background: var(--warn-bg); color: var(--warn); }
-.s-fail { background: var(--fail-bg); color: var(--fail); }
-.s-skip { background: var(--skip-bg); color: var(--skip); }
 
-.err-box { background: var(--fail-bg); border: 1px solid #fca5a5; border-radius: var(--r); padding: 14px 18px; color: var(--fail); font-size: 13px; margin: 12px 0; }
-
-button.ghost {
-  background: transparent; color: var(--text2);
-  border: 1px solid var(--border2);
-  border-radius: var(--r);
-  padding: 9px 16px; font-size: 13px;
-  cursor: pointer; margin-top: 20px;
+.c-status {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: right;
+  padding-top: 2px;
 }
-button.ghost:hover { color: var(--text); border-color: var(--text2); }
+
+.s-pass { color: var(--pass); }
+.s-warn { color: var(--warn); }
+.s-fail { color: var(--fail); }
+.s-skip { color: var(--gray-light); }
+
+/* Error */
+.err-box {
+  border: 1.5px solid var(--fail);
+  padding: 16px 18px;
+  font-size: 13px;
+  color: var(--fail);
+  margin: 16px 0;
+}
+
+/* Reset */
+button.ghost {
+  background: transparent;
+  color: var(--gray-dark);
+  border: 1px solid var(--gray-line);
+  padding: 10px 18px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 32px;
+  letter-spacing: 0.02em;
+  transition: border-color 0.15s;
+}
+
+button.ghost:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
 </style>
 </head>
 <body>
@@ -199,18 +387,20 @@ button.ghost:hover { color: var(--text); border-color: var(--text2); }
     <p class="desc">URL을 입력하면 테크니컬 SEO 체크리스트 기준으로 자동 평가합니다</p>
   </header>
 
-  <div class="card" id="inputCard">
+  <div class="input-wrap" id="inputWrap">
     <label class="field-label">검수할 페이지 URL</label>
     <div class="input-row">
       <input type="url" id="urlInput" placeholder="https://www.aladin.co.kr/mybookshop/curator.aspx?id=6" />
       <button class="primary" id="runBtn" onclick="runCheck()">검수 시작</button>
     </div>
-    <p class="note">※ 외부에 공개된 URL만 검수 가능 · JS 렌더링 후 콘텐츠 / CWV 실측치는 별도 도구 안내</p>
+    <p class="input-note">※ 외부 공개 URL만 가능 · JS 렌더링 후 콘텐츠 / CWV 실측치는 별도 도구 안내</p>
   </div>
 
   <div class="loading" id="loading">
-    <div class="spinner"></div>
-    <div class="loading-msg" id="loadingMsg">페이지를 분석하는 중입니다... (15~30초 소요)</div>
+    <div class="loading-inner">
+      <div class="spinner"></div>
+      <div class="loading-msg" id="loadingMsg">페이지를 분석하는 중입니다... (15~30초 소요)</div>
+    </div>
   </div>
 
   <div class="report" id="report"></div>
@@ -242,7 +432,6 @@ const LABELS = {
 async function runCheck() {
   const url = document.getElementById('urlInput').value.trim();
   if (!url.startsWith('http')) { alert('올바른 URL을 입력해주세요.'); return; }
-
   document.getElementById('runBtn').disabled = true;
   document.getElementById('loading').style.display = 'block';
   document.getElementById('report').style.display = 'none';
@@ -276,65 +465,69 @@ function renderReport(url, res) {
   });
   const checkable = pass + warn + fail;
   const score = checkable > 0 ? Math.round(pass / checkable * 100) : 0;
-  const sc = score >= 80 ? 'score-ok' : score >= 60 ? 'score-mid' : 'score-bad';
+  const scoreClass = score >= 80 ? 'score-pass' : score >= 60 ? 'score-mid' : 'score-bad';
   const enc = encodeURIComponent(url);
 
-  let html = `<div class="report-header">
+  let html = `<div class="report-summary">
     <div class="report-url">${url}</div>
-    <div class="score-row">
-      <div>
-        <div class="score-num ${sc}">${score}</div>
-        <div class="score-sub">/ 100 · 확인 가능 항목 기준</div>
-      </div>
-      <div class="badges">
-        <span class="badge b-pass">통과 ${pass}</span>
-        <span class="badge b-warn">주의 ${warn}</span>
-        <span class="badge b-fail">실패 ${fail}</span>
-        <span class="badge b-skip">확인불가 ${skip}</span>
-      </div>
+    <div class="score-block">
+      <div class="score-num ${scoreClass}">${score}</div>
+      <div class="score-denom">/ 100</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-item"><div class="stat-dot dot-pass"></div><span class="stat-label">통과</span><span class="stat-num">&nbsp;${pass}</span></div>
+      <div class="stat-item"><div class="stat-dot dot-warn"></div><span class="stat-label">주의</span><span class="stat-num">&nbsp;${warn}</span></div>
+      <div class="stat-item"><div class="stat-dot dot-fail"></div><span class="stat-label">실패</span><span class="stat-num">&nbsp;${fail}</span></div>
+      <div class="stat-item"><div class="stat-dot dot-skip"></div><span class="stat-label">확인불가</span><span class="stat-num">&nbsp;${skip}</span></div>
     </div>
     <div class="ext-links">
-      <a class="ext-a" href="https://pagespeed.web.dev/analysis?url=${enc}" target="_blank">PageSpeed Insights ↗</a>
-      <a class="ext-a" href="https://search.google.com/test/rich-results?url=${enc}" target="_blank">Rich Results Test ↗</a>
-      <a class="ext-a" href="https://search.google.com/search-console" target="_blank">Search Console ↗</a>
+      <a class="ext-a" href="https://pagespeed.web.dev/analysis?url=${enc}" target="_blank">PageSpeed Insights →</a>
+      <a class="ext-a" href="https://search.google.com/test/rich-results?url=${enc}" target="_blank">Rich Results Test →</a>
+      <a class="ext-a" href="https://search.google.com/search-console" target="_blank">Search Console →</a>
     </div>
-  </div>`;
+  </div>
+  <div class="sections">`;
 
   SECTIONS.forEach(sec => {
     const rows = sec.keys.map(k => {
       const r = res[k]; if (!r) return '';
-      const icons = { pass:'✓', warn:'△', fail:'✕', skip:'—' };
-      const sc2 = { pass:'s-pass', warn:'s-warn', fail:'s-fail', skip:'s-skip' };
-      const lb = { pass:'통과', warn:'주의', fail:'실패', skip:'확인불가' };
+      const icons = { pass:'✓', warn:'!', fail:'✕', skip:'—' };
+      const ic = { pass:'icon-pass', warn:'icon-warn', fail:'icon-fail', skip:'icon-skip' };
+      const sc = { pass:'s-pass', warn:'s-warn', fail:'s-fail', skip:'s-skip' };
+      const lb = { pass:'통과', warn:'주의', fail:'실패', skip:'—' };
       const dc = r.status === 'fail' ? 'fail' : r.status === 'warn' ? 'warn' : r.status === 'pass' ? 'pass' : '';
       return `<div class="check-row">
-        <div class="c-icon">${icons[r.status]||'—'}</div>
+        <div class="c-icon ${ic[r.status]||'icon-skip'}">${icons[r.status]||'—'}</div>
         <div>
           <div class="c-name">${LABELS[k]||k}</div>
           ${r.detail ? `<div class="c-detail ${dc}">${r.detail}</div>` : ''}
         </div>
-        <div class="c-status ${sc2[r.status]||'s-skip'}">${lb[r.status]||'—'}</div>
+        <div class="c-status ${sc[r.status]||'s-skip'}">${lb[r.status]||'—'}</div>
       </div>`;
     }).join('');
 
     const sfail = sec.keys.filter(k => res[k]?.status === 'fail').length;
     const swarn = sec.keys.filter(k => res[k]?.status === 'warn').length;
     const sbadge = sfail > 0
-      ? `<span class="badge b-fail">실패 ${sfail}</span>`
+      ? `<span class="sec-badge badge-fail">실패 ${sfail}</span>`
       : swarn > 0
-      ? `<span class="badge b-warn">주의 ${swarn}</span>`
-      : `<span class="badge b-pass">이상없음</span>`;
+      ? `<span class="sec-badge badge-warn">주의 ${swarn}</span>`
+      : `<span class="sec-badge badge-pass">이상없음</span>`;
 
     html += `<div class="section" id="s-${sec.id}">
       <div class="sec-head" onclick="toggle('${sec.id}')">
-        <div class="sec-title">${sec.title} ${sbadge}</div>
+        <div class="sec-left">
+          <div class="sec-title">${sec.title}</div>
+          ${sbadge}
+        </div>
         <div class="sec-arrow">▼</div>
       </div>
       <div class="sec-body">${rows}</div>
     </div>`;
   });
 
-  html += `<button class="ghost" onclick="reset()">← 다른 URL 검수하기</button>`;
+  html += `</div><button class="ghost" onclick="reset()">← 다른 URL 검수하기</button>`;
+
   const box = document.getElementById('report');
   box.innerHTML = html;
   box.style.display = 'block';
@@ -344,9 +537,9 @@ function toggle(id) { document.getElementById('s-' + id).classList.toggle('colla
 function reset() {
   document.getElementById('report').style.display = 'none';
   document.getElementById('urlInput').value = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 document.getElementById('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') runCheck(); });
 </script>
 </body>
 </html>
-
