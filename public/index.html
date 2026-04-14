@@ -1,1 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEO 자동 검수 · 알라딘 개발센터</title>
+<style>
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --border: #e5e5e2;
+  --border2: #d0d0cc;
+  --text: #1a1a18;
+  --text2: #6b6b67;
+  --text3: #9b9b97;
+  --accent: #1a1a18;
+  --pass: #1a7f4b;
+  --pass-bg: #edfbf3;
+  --warn: #b45309;
+  --warn-bg: #fef9ec;
+  --fail: #b91c1c;
+  --fail-bg: #fef2f2;
+  --skip: #6b6b67;
+  --skip-bg: #f3f3f1;
+  --info: #1d4ed8;
+  --info-bg: #eff6ff;
+  --mono: 'Courier New', monospace;
+  --r: 8px;
+  --rl: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Apple SD Gothic Neo', 'Pretendard', -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.page { max-width: 800px; margin: 0 auto; padding: 48px 24px 80px; }
+
+header { margin-bottom: 40px; }
+.brand { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; }
+h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
+.desc { font-size: 13px; color: var(--text2); }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--rl); padding: 20px 24px; margin-bottom: 24px; }
+
+.field-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; display: block; }
+
+.input-row { display: flex; gap: 8px; }
+
+input[type="url"] {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-family: var(--mono);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+input[type="url"]:focus { border-color: var(--accent); }
+input[type="url"]::placeholder { color: var(--text3); }
+
+button.primary {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--r);
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+button.primary:hover { opacity: 0.82; }
+button.primary:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.note { font-size: 12px; color: var(--text3); margin-top: 10px; }
+
+.loading { display: none; text-align: center; padding: 48px 0; }
+.spinner {
+  width: 28px; height: 28px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin: 0 auto 14px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-msg { font-size: 13px; color: var(--text2); }
+
+.report { display: none; }
+
+.report-header {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--rl);
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+.report-url {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--info);
+  margin-bottom: 14px;
+  word-break: break-all;
+}
+.score-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.score-num { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+.score-ok { color: var(--pass); }
+.score-mid { color: var(--warn); }
+.score-bad { color: var(--fail); }
+.score-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
+.b-pass { background: var(--pass-bg); color: var(--pass); }
+.b-warn { background: var(--warn-bg); color: var(--warn); }
+.b-fail { background: var(--fail-bg); color: var(--fail); }
+.b-skip { background: var(--skip-bg); color: var(--skip); }
+
+.ext-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+.ext-a {
+  font-size: 12px; color: var(--info);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 5px 11px;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+.ext-a:hover { border-color: var(--info); }
+
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--rl);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.sec-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 20px;
+  cursor: pointer;
+  user-select: none;
+}
+.sec-head:hover { background: var(--bg); }
+.sec-title { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.sec-arrow { font-size: 11px; color: var(--text3); transition: transform 0.15s; }
+.collapsed .sec-arrow { transform: rotate(-90deg); }
+.collapsed .sec-body { display: none; }
+.sec-body { border-top: 1px solid var(--border); }
+
+.check-row {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  gap: 8px;
+  align-items: start;
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.check-row:last-child { border-bottom: none; }
+.c-icon { font-size: 13px; padding-top: 1px; }
+.c-name { font-weight: 500; margin-bottom: 2px; }
+.c-detail { font-size: 11px; font-family: var(--mono); color: var(--text2); line-height: 1.5; word-break: break-all; }
+.c-detail.fail { color: var(--fail); }
+.c-detail.warn { color: var(--warn); }
+.c-detail.pass { color: var(--pass); }
+.c-status { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px; }
+.s-pass { background: var(--pass-bg); color: var(--pass); }
+.s-warn { background: var(--warn-bg); color: var(--warn); }
+.s-fail { background: var(--fail-bg); color: var(--fail); }
+.s-skip { background: var(--skip-bg); color: var(--skip); }
+
+.err-box { background: var(--fail-bg); border: 1px solid #fca5a5; border-radius: var(--r); padding: 14px 18px; color: var(--fail); font-size: 13px; margin: 12px 0; }
+
+button.ghost {
+  background: transparent; color: var(--text2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 9px 16px; font-size: 13px;
+  cursor: pointer; margin-top: 20px;
+}
+button.ghost:hover { color: var(--text); border-color: var(--text2); }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="brand">Aladin Dev Center · Synergy Team</div>
+    <h1>SEO 자동 검수</h1>
+    <p class="desc">URL을 입력하면 테크니컬 SEO 체크리스트 기준으로 자동 평가합니다</p>
+  </header>
+
+  <div class="card" id="inputCard">
+    <label class="field-label">검수할 페이지 URL</label>
+    <div class="input-row">
+      <input type="url" id="urlInput" placeholder="https://www.aladin.co.kr/mybookshop/curator.aspx?id=6" />
+      <button class="primary" id="runBtn" onclick="runCheck()">검수 시작</button>
+    </div>
+    <p class="note">※ 외부에 공개된 URL만 검수 가능 · JS 렌더링 후 콘텐츠 / CWV 실측치는 별도 도구 안내</p>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <div class="loading-msg" id="loadingMsg">페이지를 분석하는 중입니다... (15~30초 소요)</div>
+  </div>
+
+  <div class="report" id="report"></div>
+</div>
+
+<script>
+const SECTIONS = [
+  { id:'meta', title:'HTML · 메타 구조', keys:['title_exists','title_unique','title_length','desc_exists','desc_length','h1_count','heading_structure','lang','charset','viewport','og_tags'] },
+  { id:'crawl', title:'크롤링 · 색인', keys:['canonical','noindex','robots_meta'] },
+  { id:'content', title:'콘텐츠 접근성', keys:['js_hidden_content','visibility_hidden','anchor_text','img_alt','semantic_tags'] },
+  { id:'schema', title:'구조화 데이터', keys:['schema_exists','schema_type','breadcrumb'] },
+  { id:'url', title:'URL 구조', keys:['url_slug','https'] },
+  { id:'perf', title:'성능 · CWV', keys:['cwv_note','lazy_load','img_dimensions'] }
+];
+
+const LABELS = {
+  title_exists:'title 태그 존재', title_unique:'title 고유값 (브랜드명 반복 여부)', title_length:'title 길이 (30~60자 권장)',
+  desc_exists:'meta description 존재', desc_length:'meta description 길이 (80~160자 권장)',
+  h1_count:'H1 개수 (정확히 1개)', heading_structure:'헤딩 계층 구조 (H1→H2→H3)',
+  lang:'html lang="ko" 설정', charset:'meta charset utf-8', viewport:'meta viewport 설정', og_tags:'OG 태그 적용',
+  canonical:'canonical 태그', noindex:'noindex 사용 여부', robots_meta:'robots meta 이상 없음',
+  js_hidden_content:'JS에만 의존하는 주요 콘텐츠', visibility_hidden:'body visibility:hidden 초기값',
+  anchor_text:'앵커 텍스트 품질 (무의미한 반복)', img_alt:'이미지 alt 텍스트', semantic_tags:'시맨틱 태그 사용',
+  schema_exists:'JSON-LD 구조화 데이터 존재', schema_type:'적절한 Schema @type', breadcrumb:'BreadcrumbList 구현',
+  url_slug:'URL 가독성 (파라미터 vs 슬러그)', https:'HTTPS 적용',
+  cwv_note:'Core Web Vitals (외부 도구 확인 필요)', lazy_load:'이미지 lazy-load 적용', img_dimensions:'이미지 width/height 속성 (CLS 방지)'
+};
+
+async function runCheck() {
+  const url = document.getElementById('urlInput').value.trim();
+  if (!url.startsWith('http')) { alert('올바른 URL을 입력해주세요.'); return; }
+
+  document.getElementById('runBtn').disabled = true;
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('report').style.display = 'none';
+  document.getElementById('report').innerHTML = '';
+
+  try {
+    const res = await fetch('/api/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    renderReport(url, data.result);
+  } catch(e) {
+    document.getElementById('report').innerHTML = `<div class="err-box">오류: ${e.message}</div>`;
+    document.getElementById('report').style.display = 'block';
+  }
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('runBtn').disabled = false;
+}
+
+function renderReport(url, res) {
+  let pass=0, warn=0, fail=0, skip=0;
+  Object.values(res).forEach(r => {
+    if(r.status==='pass') pass++;
+    else if(r.status==='warn') warn++;
+    else if(r.status==='fail') fail++;
+    else skip++;
+  });
+  const checkable = pass + warn + fail;
+  const score = checkable > 0 ? Math.round(pass / checkable * 100) : 0;
+  const sc = score >= 80 ? 'score-ok' : score >= 60 ? 'score-mid' : 'score-bad';
+  const enc = encodeURIComponent(url);
+
+  let html = `<div class="report-header">
+    <div class="report-url">${url}</div>
+    <div class="score-row">
+      <div>
+        <div class="score-num ${sc}">${score}</div>
+        <div class="score-sub">/ 100 · 확인 가능 항목 기준</div>
+      </div>
+      <div class="badges">
+        <span class="badge b-pass">통과 ${pass}</span>
+        <span class="badge b-warn">주의 ${warn}</span>
+        <span class="badge b-fail">실패 ${fail}</span>
+        <span class="badge b-skip">확인불가 ${skip}</span>
+      </div>
+    </div>
+    <div class="ext-links">
+      <a class="ext-a" href="https://pagespeed.web.dev/analysis?url=${enc}" target="_blank">PageSpeed Insights ↗</a>
+      <a class="ext-a" href="https://search.google.com/test/rich-results?url=${enc}" target="_blank">Rich Results Test ↗</a>
+      <a class="ext-a" href="https://search.google.com/search-console" target="_blank">Search Console ↗</a>
+    </div>
+  </div>`;
+
+  SECTIONS.forEach(sec => {
+    const rows = sec.keys.map(k => {
+      const r = res[k]; if (!r) return '';
+      const icons = { pass:'✓', warn:'△', fail:'✕', skip:'—' };
+      const sc2 = { pass:'s-pass', warn:'s-warn', fail:'s-fail', skip:'s-skip' };
+      const lb = { pass:'통과', warn:'주의', fail:'실패', skip:'확인불가' };
+      const dc = r.status === 'fail' ? 'fail' : r.status === 'warn' ? 'warn' : r.status === 'pass' ? 'pass' : '';
+      return `<div class="check-row">
+        <div class="c-icon">${icons[r.status]||'—'}</div>
+        <div>
+          <div class="c-name">${LABELS[k]||k}</div>
+          ${r.detail ? `<div class="c-detail ${dc}">${r.detail}</div>` : ''}
+        </div>
+        <div class="c-status ${sc2[r.status]||'s-skip'}">${lb[r.status]||'—'}</div>
+      </div>`;
+    }).join('');
+
+    const sfail = sec.keys.filter(k => res[k]?.status === 'fail').length;
+    const swarn = sec.keys.filter(k => res[k]?.status === 'warn').length;
+    const sbadge = sfail > 0
+      ? `<span class="badge b-fail">실패 ${sfail}</span>`
+      : swarn > 0
+      ? `<span class="badge b-warn">주의 ${swarn}</span>`
+      : `<span class="badge b-pass">이상없음</span>`;
+
+    html += `<div class="section" id="s-${sec.id}">
+      <div class="sec-head" onclick="toggle('${sec.id}')">
+        <div class="sec-title">${sec.title} ${sbadge}</div>
+        <div class="sec-arrow">▼</div>
+      </div>
+      <div class="sec-body">${rows}</div>
+    </div>`;
+  });
+
+  html += `<button class="ghost" onclick="reset()">← 다른 URL 검수하기</button>`;
+  const box = document.getElementById('report');
+  box.innerHTML = html;
+  box.style.display = 'block';
+}
+
+function toggle(id) { document.getElementById('s-' + id).classList.toggle('collapsed'); }
+function reset() {
+  document.getElementById('report').style.display = 'none';
+  document.getElementById('urlInput').value = '';
+}
+document.getElementById('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') runCheck(); });
+</script>
+</body>
+</html>
 
