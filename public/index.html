@@ -378,6 +378,32 @@ button.ghost:hover {
   border-color: var(--black);
   color: var(--black);
 }
+
+@media (max-width: 768px) {
+  .page { padding: 36px 16px 80px; }
+
+  h1 { font-size: 24px; }
+
+  .input-row { flex-direction: column; border: none; gap: 8px; }
+  input[type="url"] {
+    border: 1.5px solid var(--black);
+    padding: 13px 14px;
+  }
+  button.primary { width: 100%; padding: 13px; text-align: center; }
+
+  .score-num { font-size: 48px; }
+
+  .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .ext-links { flex-direction: column; }
+  .ext-a { text-align: center; }
+
+  .check-row { grid-template-columns: 1fr 52px; gap: 8px; }
+  .c-icon { display: none; }
+
+  .sec-head { padding: 14px 0; }
+}
+  
 </style>
 </head>
 <body>
