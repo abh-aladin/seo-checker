@@ -4,12 +4,11 @@ const SYSTEM_PROMPT = `당신은 알라딘 SEO 담당팀을 위한 자동 검수
 주어진 HTML 소스를 분석하여 SEO 항목을 평가합니다.
 반드시 순수 JSON만 출력하세요. 마크다운 코드블록이나 설명 텍스트를 절대 포함하지 마세요.`;
 
-const USER_PROMPT = (url, html) => `다음 URL의 HTML 소스를 분석하세요.
+const USER_PROMPT = (url, seoHtml) => `다음 URL의 HTML을 분석하세요.
 
 URL: ${url}
 
-HTML 소스:
-${html.slice(0, 80000)}
+${seoHtml}
 
 위 HTML을 분석해서 아래 각 key를 평가하고 JSON으로만 응답하세요.
 
@@ -48,6 +47,12 @@ detail: 실제 값이나 구체적인 이유를 간결하게 (50자 이내)
 응답은 반드시 아래 형식의 JSON만 출력:
 {"title_exists":{"status":"pass","detail":"실제 타이틀 텍스트"},...}`;
 
+function extractSEORelevant(html) {
+  const head = html.match(/<head[\s\S]*?<\/head>/i)?.[0] || '';
+  const body = html.match(/<body[\s\S]*?<\/body>/i)?.[0] || '';
+  return `HEAD:\n${head}\n\nBODY(앞부분):\n${body.slice(0, 30000)}`;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -65,7 +70,6 @@ export default async function handler(req, res) {
   if (!apiKey) return res.status(500).json({ error: 'API key가 설정되지 않았습니다.' });
 
   try {
-    // 1단계: Vercel 서버에서 직접 HTML fetch
     const pageRes = await fetch(url, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; AladinSEOChecker/1.0)',
@@ -80,8 +84,8 @@ export default async function handler(req, res) {
     }
 
     const html = await pageRes.text();
+    const seoHtml = extractSEORelevant(html);
 
-    // 2단계: HTML을 Claude에게 분석 요청
     const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -93,7 +97,7 @@ export default async function handler(req, res) {
         model: 'claude-sonnet-4-20250514',
         max_tokens: 2000,
         system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: USER_PROMPT(url, html) }],
+        messages: [{ role: 'user', content: USER_PROMPT(url, seoHtml) }],
       }),
     });
 
