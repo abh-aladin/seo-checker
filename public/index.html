@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SEO 자동 검수 · 알라딘 개발센터</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -18,14 +19,13 @@
   --pass: #1a6b3c;
   --warn: #92400e;
   --fail: #991b1b;
-  --skip: #888888;
-  --mono: 'Courier New', monospace;
+  --font: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif;
 }
 
 body {
   background: var(--white);
   color: var(--black);
-  font-family: 'Apple SD Gothic Neo', 'Pretendard', -apple-system, sans-serif;
+  font-family: var(--font);
   font-size: 15px;
   line-height: 1.7;
   min-height: 100vh;
@@ -37,7 +37,6 @@ body {
   padding: 64px 24px 120px;
 }
 
-/* Header */
 header {
   border-bottom: 2px solid var(--black);
   padding-bottom: 24px;
@@ -50,11 +49,12 @@ header {
   text-transform: uppercase;
   color: var(--gray-mid);
   margin-bottom: 12px;
+  font-weight: 500;
 }
 
 h1 {
   font-size: 32px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.2;
   margin-bottom: 8px;
@@ -63,26 +63,21 @@ h1 {
 .desc {
   font-size: 14px;
   color: var(--gray-dark);
+  font-weight: 400;
 }
 
-/* Input */
-.input-wrap {
-  margin-bottom: 48px;
-}
+.input-wrap { margin-bottom: 48px; }
 
 .field-label {
   font-size: 13px;
-  letter-spacing: 0.02em;
-  text-transform: none;
-  color: var(--black);
   font-weight: 600;
+  color: var(--black);
   display: block;
   margin-bottom: 10px;
 }
 
 .input-row {
   display: flex;
-  gap: 0;
   border: 1.5px solid var(--black);
 }
 
@@ -91,23 +86,26 @@ input[type="url"] {
   border: none;
   padding: 14px 16px;
   font-size: 14px;
-  font-family: 'Apple SD Gothic Neo', 'Pretendard', -apple-system, sans-serif;
+  font-family: var(--font);
   font-weight: 600;
   color: var(--black);
   background: var(--white);
   outline: none;
 }
 
-input[type="url"]::placeholder { color: var(--gray-light); }
+input[type="url"]::placeholder {
+  color: var(--gray-light);
+  font-weight: 400;
+}
 
 button.primary {
   background: var(--black);
   color: var(--white);
   border: none;
   padding: 14px 24px;
-  font-size: 13px;
+  font-size: 14px;
+  font-family: var(--font);
   font-weight: 600;
-  letter-spacing: 0.05em;
   cursor: pointer;
   white-space: nowrap;
   transition: opacity 0.15s;
@@ -121,9 +119,9 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
   color: var(--gray-dark);
   margin-top: 10px;
   line-height: 1.5;
+  font-weight: 400;
 }
 
-/* Loading */
 .loading {
   display: none;
   padding: 48px 0;
@@ -151,24 +149,23 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
 .loading-msg {
   font-size: 14px;
   color: var(--gray-dark);
+  font-weight: 400;
 }
 
-/* Report */
 .report { display: none; }
 
 .report-summary {
   border-top: 2px solid var(--black);
   border-bottom: 1px solid var(--gray-line);
   padding: 32px 0;
-  margin-bottom: 0;
 }
 
 .report-url {
-  font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--gray-mid);
   margin-bottom: 20px;
   word-break: break-all;
+  font-weight: 400;
 }
 
 .score-block {
@@ -221,8 +218,8 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
 .dot-fail { background: var(--fail); }
 .dot-skip { background: var(--gray-light); }
 
-.stat-label { color: var(--gray-dark); }
-.stat-num { font-weight: 600; }
+.stat-label { color: var(--gray-dark); font-weight: 400; }
+.stat-num { font-weight: 700; }
 
 .ext-links {
   display: flex;
@@ -232,12 +229,13 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
 
 .ext-a {
   font-size: 12px;
+  font-family: var(--font);
+  font-weight: 500;
   color: var(--gray-dark);
   text-decoration: none;
   border: 1px solid var(--gray-line);
   padding: 5px 12px;
   transition: border-color 0.15s, color 0.15s;
-  letter-spacing: 0.02em;
 }
 
 .ext-a:hover {
@@ -245,12 +243,9 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
   color: var(--black);
 }
 
-/* Sections */
 .sections { border-bottom: 1px solid var(--gray-line); }
 
-.section {
-  border-top: 1px solid var(--gray-line);
-}
+.section { border-top: 1px solid var(--gray-line); }
 
 .sec-head {
   display: flex;
@@ -271,16 +266,15 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
 
 .sec-title {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: -0.01em;
   transition: opacity 0.15s;
 }
 
 .sec-badge {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   padding: 2px 8px;
-  letter-spacing: 0.04em;
 }
 
 .badge-pass { color: var(--pass); background: #f0faf4; }
@@ -298,7 +292,6 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
 
 .sec-body { padding-bottom: 8px; }
 
-/* Check rows */
 .check-row {
   display: grid;
   grid-template-columns: 20px 1fr 60px;
@@ -306,7 +299,6 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
   align-items: start;
   padding: 12px 0;
   border-top: 1px solid var(--gray-bg);
-  font-size: 13px;
 }
 
 .c-icon {
@@ -322,14 +314,14 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
 
 .c-name {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--black);
   margin-bottom: 3px;
 }
 
 .c-detail {
   font-size: 12px;
-  font-family: var(--mono);
+  font-weight: 400;
   line-height: 1.5;
   word-break: break-all;
   color: var(--gray-dark);
@@ -342,8 +334,7 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
 .c-status {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
   text-align: right;
   padding-top: 2px;
 }
@@ -353,26 +344,26 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
 .s-fail { color: var(--fail); }
 .s-skip { color: var(--gray-light); }
 
-/* Error */
 .err-box {
   border: 1.5px solid var(--fail);
   padding: 16px 18px;
   font-size: 13px;
+  font-weight: 500;
   color: var(--fail);
   margin: 16px 0;
 }
 
-/* Reset */
 button.ghost {
   background: transparent;
   color: var(--gray-dark);
   border: 1px solid var(--gray-line);
   padding: 10px 18px;
   font-size: 13px;
+  font-family: var(--font);
+  font-weight: 500;
   cursor: pointer;
   margin-top: 32px;
-  letter-spacing: 0.02em;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, color 0.15s;
 }
 
 button.ghost:hover {
@@ -382,29 +373,18 @@ button.ghost:hover {
 
 @media (max-width: 768px) {
   .page { padding: 36px 16px 80px; }
-
   h1 { font-size: 24px; }
-
   .input-row { flex-direction: column; border: none; gap: 8px; }
-  input[type="url"] {
-    border: 1.5px solid var(--black);
-    padding: 13px 14px;
-  }
+  input[type="url"] { border: 1.5px solid var(--black); padding: 13px 14px; }
   button.primary { width: 100%; padding: 13px; text-align: center; }
-
   .score-num { font-size: 48px; }
-
   .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
   .ext-links { flex-direction: column; }
-  .ext-a { text-align: center; }
-
+  .ext-a { text-align: center; padding: 8px 12px; }
   .check-row { grid-template-columns: 1fr 52px; gap: 8px; }
   .c-icon { display: none; }
-
   .sec-head { padding: 14px 0; }
 }
-  
 </style>
 </head>
 <body>
@@ -523,19 +503,19 @@ function renderReport(url, res) {
       const ic = { pass:'icon-pass', warn:'icon-warn', fail:'icon-fail', skip:'icon-skip' };
       const sc = { pass:'s-pass', warn:'s-warn', fail:'s-fail', skip:'s-skip' };
       const lb = { pass:'통과', warn:'주의', fail:'실패', skip:'—' };
-      const dc = r.status === 'fail' ? 'fail' : r.status === 'warn' ? 'warn' : r.status === 'pass' ? 'pass' : '';
+      const dc = r.status==='fail'?'fail':r.status==='warn'?'warn':r.status==='pass'?'pass':'';
       return `<div class="check-row">
         <div class="c-icon ${ic[r.status]||'icon-skip'}">${icons[r.status]||'—'}</div>
         <div>
           <div class="c-name">${LABELS[k]||k}</div>
-          ${r.detail ? `<div class="c-detail ${dc}">${r.detail}</div>` : ''}
+          ${r.detail?`<div class="c-detail ${dc}">${r.detail}</div>`:''}
         </div>
         <div class="c-status ${sc[r.status]||'s-skip'}">${lb[r.status]||'—'}</div>
       </div>`;
     }).join('');
 
-    const sfail = sec.keys.filter(k => res[k]?.status === 'fail').length;
-    const swarn = sec.keys.filter(k => res[k]?.status === 'warn').length;
+    const sfail = sec.keys.filter(k => res[k]?.status==='fail').length;
+    const swarn = sec.keys.filter(k => res[k]?.status==='warn').length;
     const sbadge = sfail > 0
       ? `<span class="sec-badge badge-fail">실패 ${sfail}</span>`
       : swarn > 0
@@ -555,19 +535,18 @@ function renderReport(url, res) {
   });
 
   html += `</div><button class="ghost" onclick="reset()">← 다른 URL 검수하기</button>`;
-
   const box = document.getElementById('report');
   box.innerHTML = html;
   box.style.display = 'block';
 }
 
-function toggle(id) { document.getElementById('s-' + id).classList.toggle('collapsed'); }
+function toggle(id) { document.getElementById('s-'+id).classList.toggle('collapsed'); }
 function reset() {
   document.getElementById('report').style.display = 'none';
   document.getElementById('urlInput').value = '';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-document.getElementById('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') runCheck(); });
+document.getElementById('urlInput').addEventListener('keydown', e => { if(e.key==='Enter') runCheck(); });
 </script>
 </body>
 </html>
