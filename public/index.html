@@ -3,18 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SEO 자동 검수</title>
+<title>SEO 자동 검수 · 알라딘 개발센터</title>
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
   --black: #111111;
+  --pink: #FF2D78;
   --gray-dark: #444444;
   --gray-mid: #888888;
   --gray-light: #cccccc;
   --gray-line: #e8e8e8;
-  --gray-bg: #f5f5f5;
+  --gray-bg: #f7f7f7;
   --white: #ffffff;
   --pass: #1a6b3c;
   --warn: #92400e;
@@ -31,66 +32,64 @@ body {
   min-height: 100vh;
 }
 
-.page {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 64px 24px 120px;
+/* Hero */
+.hero {
+  background: var(--black);
+  padding: 80px 24px 72px;
+  text-align: center;
 }
 
-header {
-  border-bottom: 2px solid var(--black);
-  padding-bottom: 24px;
-  margin-bottom: 48px;
-}
-
-.brand {
+.hero-brand {
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gray-mid);
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   font-weight: 500;
 }
 
-h1 {
-  font-size: 32px;
+.hero-title {
+  font-size: 40px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 1.2;
-  margin-bottom: 8px;
+  line-height: 1.15;
+  color: var(--white);
+  margin-bottom: 12px;
 }
 
-.desc {
-  font-size: 14px;
-  color: var(--gray-dark);
+.hero-title span { color: var(--pink); }
+
+.hero-desc {
+  font-size: 15px;
+  color: var(--gray-mid);
+  margin-bottom: 40px;
   font-weight: 400;
 }
 
-.input-wrap { margin-bottom: 48px; }
-
-.field-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--black);
-  display: block;
-  margin-bottom: 10px;
+.hero-input-wrap {
+  max-width: 640px;
+  margin: 0 auto;
 }
 
-.input-row {
+.hero-input-row {
   display: flex;
-  border: 1.5px solid var(--black);
+  background: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
 }
 
 input[type="url"] {
   flex: 1;
   border: none;
-  padding: 14px 16px;
+  padding: 18px 20px;
   font-size: 14px;
   font-family: var(--font);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--black);
   background: var(--white);
   outline: none;
+  min-width: 0;
 }
 
 input[type="url"]::placeholder {
@@ -99,102 +98,107 @@ input[type="url"]::placeholder {
 }
 
 button.primary {
-  background: var(--black);
+  background: var(--pink);
   color: var(--white);
   border: none;
-  padding: 14px 24px;
-  font-size: 14px;
+  padding: 18px 32px;
+  font-size: 15px;
   font-family: var(--font);
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
   transition: opacity 0.15s;
+  border-radius: 0 12px 12px 0;
 }
 
-button.primary:hover { opacity: 0.75; }
-button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
+button.primary:hover { opacity: 0.85; }
+button.primary:disabled { opacity: 0.35; cursor: not-allowed; }
 
-.input-note {
-  font-size: 13px;
-  color: var(--gray-dark);
-  margin-top: 10px;
-  line-height: 1.5;
+.hero-note {
+  font-size: 12px;
+  color: var(--gray-mid);
+  margin-top: 14px;
   font-weight: 400;
 }
 
+/* Loading */
 .loading {
   display: none;
-  padding: 48px 0;
-  border-top: 1px solid var(--gray-line);
-}
-
-.loading-inner {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+  text-align: center;
+  padding: 80px 24px;
 }
 
 .spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--gray-line);
-  border-top-color: var(--black);
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid var(--gray-line);
+  border-top-color: var(--pink);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
-  flex-shrink: 0;
+  margin: 0 auto 16px;
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .loading-msg {
   font-size: 14px;
-  color: var(--gray-dark);
+  color: var(--gray-mid);
   font-weight: 400;
 }
 
+/* Report */
 .report { display: none; }
 
+.report-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
 .report-summary {
-  border-top: 2px solid var(--black);
-  border-bottom: 1px solid var(--gray-line);
-  padding: 32px 0;
+  background: var(--gray-bg);
+  border-radius: 16px;
+  padding: 36px 40px;
+  margin-bottom: 32px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 40px;
+  align-items: start;
 }
 
-.report-url {
-  font-size: 12px;
-  color: var(--gray-mid);
-  margin-bottom: 20px;
-  word-break: break-all;
-  font-weight: 400;
-}
-
-.score-block {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin-bottom: 16px;
-}
+.score-block { text-align: center; }
 
 .score-num {
-  font-size: 64px;
+  font-size: 80px;
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1;
 }
 
 .score-denom {
-  font-size: 18px;
+  font-size: 16px;
   color: var(--gray-mid);
   font-weight: 400;
+  margin-top: 2px;
 }
 
 .score-pass { color: var(--black); }
 .score-mid { color: var(--black); }
 .score-bad { color: var(--fail); }
 
+.report-right {}
+
+.report-url {
+  font-size: 12px;
+  color: var(--gray-mid);
+  margin-bottom: 16px;
+  word-break: break-all;
+  font-weight: 400;
+}
+
 .stat-row {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   flex-wrap: wrap;
   margin-bottom: 20px;
 }
@@ -233,8 +237,9 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
   font-weight: 500;
   color: var(--gray-dark);
   text-decoration: none;
-  border: 1px solid var(--gray-line);
-  padding: 5px 12px;
+  border: 1.5px solid var(--gray-line);
+  border-radius: 20px;
+  padding: 5px 14px;
   transition: border-color 0.15s, color 0.15s;
 }
 
@@ -243,38 +248,44 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
   color: var(--black);
 }
 
-.sections { border-bottom: 1px solid var(--gray-line); }
+/* Sections */
+.sections { display: flex; flex-direction: column; gap: 8px; }
 
-.section { border-top: 1px solid var(--gray-line); }
+.section {
+  background: var(--white);
+  border: 1.5px solid var(--gray-line);
+  border-radius: 12px;
+  overflow: hidden;
+}
 
 .sec-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 0;
+  padding: 16px 20px;
   cursor: pointer;
   user-select: none;
+  transition: background 0.15s;
 }
 
-.sec-head:hover .sec-title { opacity: 0.6; }
+.sec-head:hover { background: var(--gray-bg); }
 
 .sec-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .sec-title {
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  transition: opacity 0.15s;
 }
 
 .sec-badge {
   font-size: 11px;
   font-weight: 700;
-  padding: 2px 8px;
+  padding: 2px 10px;
+  border-radius: 20px;
 }
 
 .badge-pass { color: var(--pass); background: #f0faf4; }
@@ -282,7 +293,7 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
 .badge-fail { color: var(--fail); background: #fef2f2; }
 
 .sec-arrow {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--gray-mid);
   transition: transform 0.2s;
 }
@@ -290,16 +301,21 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
 .section.collapsed .sec-arrow { transform: rotate(-90deg); }
 .section.collapsed .sec-body { display: none; }
 
-.sec-body { padding-bottom: 8px; }
+.sec-body {
+  border-top: 1.5px solid var(--gray-line);
+  padding: 4px 0;
+}
 
 .check-row {
   display: grid;
   grid-template-columns: 20px 1fr 60px;
   gap: 12px;
   align-items: start;
-  padding: 12px 0;
-  border-top: 1px solid var(--gray-bg);
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--gray-bg);
 }
+
+.check-row:last-child { border-bottom: none; }
 
 .c-icon {
   font-size: 12px;
@@ -334,7 +350,6 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
 .c-status {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.04em;
   text-align: right;
   padding-top: 2px;
 }
@@ -345,24 +360,31 @@ button.primary:disabled { opacity: 0.3; cursor: not-allowed; }
 .s-skip { color: var(--gray-light); }
 
 .err-box {
+  max-width: 760px;
+  margin: 32px auto;
+  padding: 0 24px;
+}
+
+.err-inner {
   border: 1.5px solid var(--fail);
-  padding: 16px 18px;
+  border-radius: 12px;
+  padding: 16px 20px;
   font-size: 13px;
   font-weight: 500;
   color: var(--fail);
-  margin: 16px 0;
 }
 
 button.ghost {
   background: transparent;
   color: var(--gray-dark);
-  border: 1px solid var(--gray-line);
-  padding: 10px 18px;
+  border: 1.5px solid var(--gray-line);
+  border-radius: 20px;
+  padding: 10px 20px;
   font-size: 13px;
   font-family: var(--font);
   font-weight: 500;
   cursor: pointer;
-  margin-top: 32px;
+  margin-top: 24px;
   transition: border-color 0.15s, color 0.15s;
 }
 
@@ -372,45 +394,44 @@ button.ghost:hover {
 }
 
 @media (max-width: 768px) {
-  .page { padding: 36px 16px 80px; }
-  h1 { font-size: 24px; }
-  .input-row { flex-direction: column; border: none; gap: 8px; }
-  input[type="url"] { border: 1.5px solid var(--black); padding: 13px 14px; }
-  button.primary { width: 100%; padding: 13px; text-align: center; }
-  .score-num { font-size: 48px; }
-  .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .ext-links { flex-direction: column; }
-  .ext-a { text-align: center; padding: 8px 12px; }
-  .check-row { grid-template-columns: 1fr 52px; gap: 8px; }
+  .hero { padding: 56px 20px 48px; }
+  .hero-title { font-size: 28px; }
+
+  .hero-input-row { flex-direction: column; border-radius: 12px; }
+  input[type="url"] { border-radius: 12px 12px 0 0; padding: 16px; }
+  button.primary { border-radius: 0 0 12px 12px; padding: 16px; text-align: center; }
+
+  .report-summary { grid-template-columns: 1fr; gap: 24px; padding: 24px; }
+  .score-block { display: flex; align-items: baseline; gap: 8px; }
+  .score-num { font-size: 56px; }
+
+  .report-inner { padding: 32px 16px 60px; }
+
+  .check-row { grid-template-columns: 1fr 52px; }
   .c-icon { display: none; }
-  .sec-head { padding: 14px 0; }
 }
 </style>
 </head>
 <body>
-<div class="page">
-  <header>
-    <h1>SEO 자동 검수</h1>
-    <p class="desc">URL을 입력하면 테크니컬 SEO 체크리스트 기준으로 자동 평가합니다.</p>
-  </header>
 
-  <div class="input-wrap" id="inputWrap">
-    <label class="field-label">검수할 페이지 URL</label>
-    <div class="input-row">
-      <input type="url" id="urlInput" />
-      <button class="primary" id="runBtn" onclick="runCheck()">검수 시작</button>
+<div class="hero" id="heroSection">
+  <h1 class="hero-title">SEO <span>Auto Check</span></h1>
+  <p class="hero-desc">URL을 입력하면 테크니컬 SEO 체크리스트 기준으로 자동 평가합니다</p>
+  <div class="hero-input-wrap">
+    <div class="hero-input-row">
+      <input type="url" id="urlInput" placeholder="https://www.aladin.co.kr/mybookshop/curator.aspx?id=6" />
+      <button class="primary" id="runBtn" onclick="runCheck()">GO</button>
     </div>
+    <p class="hero-note">※ 외부 공개 URL만 가능 · JS 렌더링 후 콘텐츠 / CWV 실측치는 별도 도구 안내</p>
   </div>
-
-  <div class="loading" id="loading">
-    <div class="loading-inner">
-      <div class="spinner"></div>
-      <div class="loading-msg" id="loadingMsg">페이지를 분석하는 중입니다... (15~30초 소요)</div>
-    </div>
-  </div>
-
-  <div class="report" id="report"></div>
 </div>
+
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <div class="loading-msg" id="loadingMsg">페이지를 분석하는 중입니다... (15~30초 소요)</div>
+</div>
+
+<div class="report" id="report"></div>
 
 <script>
 const SECTIONS = [
@@ -453,7 +474,7 @@ async function runCheck() {
     if (data.error) throw new Error(data.error);
     renderReport(url, data.result);
   } catch(e) {
-    document.getElementById('report').innerHTML = `<div class="err-box">오류: ${e.message}</div>`;
+    document.getElementById('report').innerHTML = `<div class="err-box"><div class="err-inner">오류: ${e.message}</div></div>`;
     document.getElementById('report').style.display = 'block';
   }
 
@@ -474,25 +495,28 @@ function renderReport(url, res) {
   const scoreClass = score >= 80 ? 'score-pass' : score >= 60 ? 'score-mid' : 'score-bad';
   const enc = encodeURIComponent(url);
 
-  let html = `<div class="report-summary">
-    <div class="report-url">${url}</div>
-    <div class="score-block">
-      <div class="score-num ${scoreClass}">${score}</div>
-      <div class="score-denom">/ 100</div>
+  let html = `<div class="report-inner">
+    <div class="report-summary">
+      <div class="score-block">
+        <div class="score-num ${scoreClass}">${score}</div>
+        <div class="score-denom">/ 100</div>
+      </div>
+      <div class="report-right">
+        <div class="report-url">${url}</div>
+        <div class="stat-row">
+          <div class="stat-item"><div class="stat-dot dot-pass"></div><span class="stat-label">통과</span><span class="stat-num">&nbsp;${pass}</span></div>
+          <div class="stat-item"><div class="stat-dot dot-warn"></div><span class="stat-label">주의</span><span class="stat-num">&nbsp;${warn}</span></div>
+          <div class="stat-item"><div class="stat-dot dot-fail"></div><span class="stat-label">실패</span><span class="stat-num">&nbsp;${fail}</span></div>
+          <div class="stat-item"><div class="stat-dot dot-skip"></div><span class="stat-label">확인불가</span><span class="stat-num">&nbsp;${skip}</span></div>
+        </div>
+        <div class="ext-links">
+          <a class="ext-a" href="https://pagespeed.web.dev/analysis?url=${enc}" target="_blank">PageSpeed Insights →</a>
+          <a class="ext-a" href="https://search.google.com/test/rich-results?url=${enc}" target="_blank">Rich Results Test →</a>
+          <a class="ext-a" href="https://search.google.com/search-console" target="_blank">Search Console →</a>
+        </div>
+      </div>
     </div>
-    <div class="stat-row">
-      <div class="stat-item"><div class="stat-dot dot-pass"></div><span class="stat-label">통과</span><span class="stat-num">&nbsp;${pass}</span></div>
-      <div class="stat-item"><div class="stat-dot dot-warn"></div><span class="stat-label">주의</span><span class="stat-num">&nbsp;${warn}</span></div>
-      <div class="stat-item"><div class="stat-dot dot-fail"></div><span class="stat-label">실패</span><span class="stat-num">&nbsp;${fail}</span></div>
-      <div class="stat-item"><div class="stat-dot dot-skip"></div><span class="stat-label">확인불가</span><span class="stat-num">&nbsp;${skip}</span></div>
-    </div>
-    <div class="ext-links">
-      <a class="ext-a" href="https://pagespeed.web.dev/analysis?url=${enc}" target="_blank">PageSpeed Insights →</a>
-      <a class="ext-a" href="https://search.google.com/test/rich-results?url=${enc}" target="_blank">Rich Results Test →</a>
-      <a class="ext-a" href="https://search.google.com/search-console" target="_blank">Search Console →</a>
-    </div>
-  </div>
-  <div class="sections">`;
+    <div class="sections">`;
 
   SECTIONS.forEach(sec => {
     const rows = sec.keys.map(k => {
@@ -532,7 +556,7 @@ function renderReport(url, res) {
     </div>`;
   });
 
-  html += `</div><button class="ghost" onclick="reset()">← 다른 URL 검수하기</button>`;
+  html += `</div><button class="ghost" onclick="reset()">← 다른 URL 검수하기</button></div>`;
   const box = document.getElementById('report');
   box.innerHTML = html;
   box.style.display = 'block';
