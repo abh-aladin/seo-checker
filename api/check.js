@@ -11,7 +11,7 @@ URL: ${url}
 ${seoHtml}
 
 위 HTML을 분석해서 아래 각 key를 평가하고 JSON으로만 응답하세요.
-
+---
 status 값: pass(문제없음) / fail(명확한 문제) / warn(개선권장) / skip(이 도구로 확인불가)
 detail: 실제 값이나 구체적인 이유를 간결하게 (50자 이내)
 
