@@ -50,7 +50,7 @@ detail: 실제 값이나 구체적인 이유를 간결하게 (50자 이내). det
 function extractSEORelevant(html) {
   const head = html.match(/<head[\s\S]*?<\/head>/i)?.[0] || '';
   const body = html.match(/<body[\s\S]*?<\/body>/i)?.[0] || '';
-  return HEAD:\n${head}\n\nBODY(앞부분):\n${body.slice(0, 30000)};
+  return `HEAD:\n${head}\n\nBODY(앞부분):\n${body.slice(0, 30000)}`;  
 }
 
 // 모델이 detail 안에 이스케이프 안 된 따옴표를 넣었을 때를 대비한 복구 파서
@@ -96,7 +96,7 @@ export default async function handler(req, res) {
     });
 
     if (!pageRes.ok) {
-      return res.status(400).json({ error: 페이지를 가져올 수 없습니다. (${pageRes.status}) });
+      return res.status(400).json({ error: `페이지를 가져올 수 없습니다. (${pageRes.status})` });
     }
 
     const html = await pageRes.text();
