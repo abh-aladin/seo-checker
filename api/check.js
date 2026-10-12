@@ -13,7 +13,7 @@ ${seoHtml}
 위 HTML을 분석해서 아래 각 key를 평가하고 JSON으로만 응답하세요.
 ---
 status 값: pass(문제없음) / fail(명확한 문제) / warn(개선권장) / skip(이 도구로 확인불가)
-detail: 실제 값이나 구체적인 이유를 간결하게 (50자 이내)
+detail: 실제 값이나 구체적인 이유를 간결하게 (50자 이내). detail 안에는 큰따옴표(")와 줄바꿈, 역슬래시를 절대 쓰지 말고 필요하면 작은따옴표를 쓰세요
 
 평가 key와 기준:
 - title_exists: title 태그가 있으면 pass, 없으면 fail. detail에 실제 title 텍스트 포함
@@ -50,7 +50,23 @@ detail: 실제 값이나 구체적인 이유를 간결하게 (50자 이내)
 function extractSEORelevant(html) {
   const head = html.match(/<head[\s\S]*?<\/head>/i)?.[0] || '';
   const body = html.match(/<body[\s\S]*?<\/body>/i)?.[0] || '';
-  return `HEAD:\n${head}\n\nBODY(앞부분):\n${body.slice(0, 30000)}`;
+  return HEAD:\n${head}\n\nBODY(앞부분):\n${body.slice(0, 30000)};
+}
+
+// 모델이 detail 안에 이스케이프 안 된 따옴표를 넣었을 때를 대비한 복구 파서
+function parseResult(raw) {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    const result = {};
+    const re = /"(\w+)"\s*:\s*\{\s*"status"\s*:\s*"(pass|fail|warn|skip)"\s*,\s*"detail"\s*:\s*"([\s\S]*?)"\s*\}(?=\s*[,}])/g;
+    let m;
+    while ((m = re.exec(raw))) {
+      result[m[1]] = { status: m[2], detail: m[3].replace(/\s+/g, ' ').trim() };
+    }
+    if (!Object.keys(result).length) throw new Error('응답 JSON 파싱 실패');
+    return result;
+  }
 }
 
 export default async function handler(req, res) {
@@ -80,7 +96,7 @@ export default async function handler(req, res) {
     });
 
     if (!pageRes.ok) {
-      return res.status(400).json({ error: `페이지를 가져올 수 없습니다. (${pageRes.status})` });
+      return res.status(400).json({ error: 페이지를 가져올 수 없습니다. (${pageRes.status}) });
     }
 
     const html = await pageRes.text();
@@ -95,7 +111,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-5-5',
-        max_tokens: 2000,
+        max_tokens: 4000,
         system: SYSTEM_PROMPT,
         messages: [{ role: 'user', content: USER_PROMPT(url, seoHtml) }],
       }),
@@ -115,7 +131,7 @@ export default async function handler(req, res) {
     const match = text.match(/\{[\s\S]*\}/);
     if (!match) return res.status(500).json({ error: '응답 파싱 실패' });
 
-    const result = JSON.parse(match[0]);
+    const result = parseResult(match[0]);
     return res.status(200).json({ result });
   } catch (e) {
     return res.status(500).json({ error: e.message });
